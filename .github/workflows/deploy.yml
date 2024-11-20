@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Install Node.js
         uses: actions/setup-node@v4
@@ -34,3 +36,6 @@ jobs:
           folder: dist
           branch: gh-pages
           clean: true
+          clean-exclude: |
+            .nojekyll
+          force: true
