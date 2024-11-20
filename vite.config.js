@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/',
+  base: '/wheattoast11.github.io/',
   build: {
     outDir: 'dist'
   }
