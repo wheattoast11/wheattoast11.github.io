@@ -389,6 +389,90 @@ footer {
     letter-spacing: 0.01em;
 }
 
+/* Add to existing style.css */
+.back-link {
+    display: inline-block;
+    color: var(--text);
+    text-decoration: none;
+    opacity: 0.8;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    letter-spacing: 0.02em;
+}
+
+.back-link:hover {
+    opacity: 1;
+    color: var(--glow);
+    transform: translateX(-3px);
+}
+
+.manifesto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 4rem;
+    margin-bottom: 6rem;
+}
+
+.manifesto-item {
+    position: relative;
+    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 2px;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.manifesto-item:hover {
+    transform: translateY(-3px);
+    background: var(--hover);
+    border-color: var(--glow);
+}
+
+.manifesto-item h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+}
+
+.manifesto-item p {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    opacity: 0.9;
+    letter-spacing: -0.01em;
+}
+
+.principles {
+    margin-top: 8rem;
+    padding: 3rem;
+    background: var(--card-bg);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 2px;
+}
+
+.principles h2 {
+    margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+    .manifesto-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .manifesto-item {
+        padding: 1.5rem;
+    }
+
+    .manifesto-item h2 {
+        font-size: 1.75rem;
+    }
+
+    .principles {
+        padding: 1.5rem;
+        margin-top: 4rem;
+    }
+}
+
 @keyframes fadeIn {
     to {
         opacity: 1;

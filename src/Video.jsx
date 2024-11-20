@@ -5,6 +5,22 @@ import { createNoise4D } from 'simplex-noise';
 
 const BackgroundAnimation = () => {
   const noise4D = createNoise4D();
+  const [dimensions, setDimensions] = React.useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+  
+  React.useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
   
   React.useEffect(() => {
     const canvas = document.getElementById('remotionCanvas');
@@ -13,16 +29,16 @@ const BackgroundAnimation = () => {
     const ctx = canvas.getContext('2d');
     let animationFrame;
     let particles = Array.from({ length: 100 }, () => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
+      x: Math.random() * dimensions.width,
+      y: Math.random() * dimensions.height,
       size: Math.random() * 2 + 1,
       speedX: (Math.random() - 0.5) * 0.5,
       speedY: (Math.random() - 0.5) * 0.5
     }));
 
     const animate = (time) => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      canvas.width = dimensions.width;
+      canvas.height = dimensions.height;
 
       // Create gradient background
       const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
@@ -79,7 +95,7 @@ const BackgroundAnimation = () => {
         cancelAnimationFrame(animationFrame);
       }
     };
-  }, []);
+  }, [dimensions]);
 
   return (
     <AbsoluteFill style={{ background: 'transparent' }}>
@@ -97,12 +113,29 @@ const BackgroundAnimation = () => {
 };
 
 export const RemotionVideo = () => {
+  const [dimensions, setDimensions] = React.useState({
+    width: window.innerWidth,
+    height: window.innerHeight
+  });
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
     <Player
       component={BackgroundAnimation}
       durationInFrames={300}
-      compositionWidth={1920}
-      compositionHeight={1080}
+      compositionWidth={dimensions.width}
+      compositionHeight={dimensions.height}
       fps={30}
       style={{
         width: '100%',
