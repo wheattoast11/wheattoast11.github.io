@@ -3,80 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intuition Labs LLC</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter/3.19.3/inter.css" rel="stylesheet">
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-    <link href="assets/css/style.css" rel="stylesheet">
+    <title>Intuition Labs LLC - AI Research & Consulting</title>
+    <link rel="stylesheet" href="/style.css">
 </head>
 <body>
-    <div class="content">
+    <canvas id="bg"></canvas>
+    <div id="app">
         <header>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <img src="logo.jpg" alt="Intuition Labs Logo" style="height: 80px; width: auto;">
-                    <h1>Intuition Labs LLC</h1>
-                </div>
-                <button class="schedule-btn" onclick="Calendly.initPopupWidget({url: 'https://calendly.com/intuitionlabs/consulting-services'});return false;">Schedule Consultation</button>
-            </div>
-            <p class="tagline">Transforming AI strategy through polymathic expertise and technical innovation</p>
+            <h1>Intuition Labs</h1>
+            <p class="tagline">Pioneering the future of AI through research and strategic innovation</p>
         </header>
 
-        <section class="section" style="animation: fadeUp 0.8s ease forwards 0.4s">
-            <h2>Experience & Expertise</h2>
+        <section class="section">
+            <h2>Our Vision</h2>
+            <p>Transforming enterprises through cutting-edge AI solutions and polymathic expertise</p>
+            <div class="cta-container">
+                <button class="cta-button">Schedule Consultation</button>
+                <a href="#manifesto" class="text-link">Read Our Manifesto</a>
+            </div>
+        </section>
+
+        <section class="section apps-grid">
+            <h2>Featured Solutions</h2>
             <div class="grid">
-                <div class="item">
-                    <h3>Enterprise AI Strategy / Google</h3>
-                    <ul class="tech-list">
-                        <li>Architected first Enterprise Gen AI GTM for VC-backed customers</li>
-                        <li>Pioneered LLM-powered sales enablement systems</li>
-                        <li>Led Cloud-wide tech stack transformation (PM/PgM)</li>
-                        <li>30k+ hours annual productivity improvement</li>
-                    </ul>
+                <div class="card">
+                    <h3>Enterprise AI Strategy</h3>
+                    <p>Comprehensive AI implementation and transformation roadmaps</p>
+                    <a href="#strategy" class="learn-more">Learn More →</a>
                 </div>
-                <div class="item">
-                    <h3>Industry Transformation / ZS</h3>
-                    <ul class="tech-list">
-                        <li>Global PMI for largest ag-sci merger (60+ countries)</li>
-                        <li>COVID response strategy for MRNA vaccine manufacturers</li>
-                        <li>Enterprise systems architecture across industries</li>
-                        <li>Performance management for mega-cap enterprises</li>
-                    </ul>
+                <div class="card">
+                    <h3>LLM Systems</h3>
+                    <p>Custom language model development and integration</p>
+                    <a href="#llm" class="learn-more">Learn More →</a>
+                </div>
+                <div class="card">
+                    <h3>AI Agents</h3>
+                    <p>Autonomous agent systems for process automation</p>
+                    <a href="#agents" class="learn-more">Learn More →</a>
                 </div>
             </div>
         </section>
 
-        <section class="section" style="animation: fadeUp 0.8s ease forwards 0.5s">
-            <h2>Services</h2>
-            <div class="grid">
-                <div class="item">
-                    <h3>Strategic AI Innovation</h3>
-                    <ul class="tech-list">
-                        <li>Enterprise AI Implementation Strategy</li>
-                        <li>LLM & Agent System Architecture</li>
-                        <li>GTM Strategy Development</li>
-                        <li>Complex System Integration</li>
-                    </ul>
-                </div>
-                <div class="item">
-                    <h3>Technical Implementation</h3>
-                    <ul class="tech-list">
-                        <li>Custom AI Agent Development</li>
-                        <li>Advanced Prompt Engineering</li>
-                        <li>Multi-modal System Design</li>
-                        <li>Process Automation & Optimization</li>
-                    </ul>
-                </div>
+        <footer>
+            <div class="social-links">
+                <a href="#linkedin">LinkedIn</a>
+                <a href="#github">GitHub</a>
+                <a href="#twitter">Twitter</a>
             </div>
-        </section>
-
-        <section class="contact" style="animation: fadeUp 0.8s ease forwards 0.6s">
-            <a href="mailto:tdesai1994@gmail.com" class="link">Contact: Tej Desai</a>
-            <a href="https://www.youtube.com/@IntuitionLabsLLC" class="link">Youtube</a>
-            <a href="https://www.linkedin.com/company/intuition-labs/" class="link">LinkedIn</a>
-        </section>
+            <p class="copyright">© 2024 Intuition Labs LLC. Pioneering the future of AI.</p>
+        </footer>
     </div>
-
-    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-    <script src="assets/js/main.js"></script>
+    <script type="module" src="/main.js"></script>
 </body>
 </html>
