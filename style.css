@@ -24,6 +24,36 @@
     font-display: swap;
 }
 
+@font-face {
+    font-family: "Space Mono";
+    src: url("https://fonts.gstatic.com/s/spacemono/v12/i7dPIFZifjKcF5UAWdDRYEF8RQ.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Syncopate";
+    src: url("https://fonts.gstatic.com/s/syncopate/v19/pe0sMIuPIYBCpEV5eFdCBfe_.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cinzel";
+    src: url("https://fonts.gstatic.com/s/cinzel/v23/8vIU7ww63mVu7gtR-kwKxNvkNOjw-tbnfYPlDX5Z.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Audiowide";
+    src: url("https://fonts.gstatic.com/s/audiowide/v16/l7gdbjpo0cum0ckerWCdlg_O.woff2") format("woff2");
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Cormorant Garamond";
+    src: url("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3WmX5slCNuHLi8bLeY9MK7whWMhyjYrEPjuw-N.woff2") format("woff2");
+    font-display: swap;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -55,7 +85,7 @@ canvas {
 }
 
 header {
-    margin-bottom: 8rem;
+    margin-bottom: 8rem;  /* Changed from 8rem to create equal spacing */
     opacity: 0;
     transform: translateY(20px);
     animation: fadeIn 1s ease forwards;
@@ -126,6 +156,98 @@ h2::before {
     z-index: -1;
 }
 
+.platforms-marquee {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 2rem 0;
+    margin: 4rem 0;  /* Changed from -4rem 0 8rem to create equal spacing */
+    background: linear-gradient(
+        to right,
+        transparent,
+        var(--card-bg) 20%,
+        var(--card-bg) 80%,
+        transparent
+    );
+}
+
+.platforms-track {
+    display: flex;
+    gap: 4rem;
+    animation: scroll 30s linear infinite;
+    white-space: nowrap;
+    will-change: transform;
+}
+
+.platform-name {
+    font-size: 2.5rem;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    padding: 0.5rem 2rem;
+    position: relative;
+}
+
+.platform-name:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+/* Individual platform styles */
+.platform-terminals {
+    font-family: "Space Mono", monospace;
+    letter-spacing: -0.05em;
+    color: var(--glow);
+    text-shadow: 0 0 10px rgba(122, 158, 159, 0.3);
+}
+
+.platform-radical {
+    font-family: var(--font-display);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--glow));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: 0.1em;
+}
+
+.platform-pathfinder {
+    font-family: "Syncopate", var(--font-display);
+    letter-spacing: -0.02em;
+    color: var(--text);
+    border-bottom: 2px solid var(--glow);
+}
+
+.platform-wuji {
+    font-family: "Cinzel", serif;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-shadow: 0 0 20px rgba(80, 108, 127, 0.2);
+}
+
+.platform-boom {
+    font-family: "Audiowide", var(--font-display);
+    color: var(--glow);
+    text-shadow: 0 0 15px rgba(122, 158, 159, 0.4);
+    transform: skew(-5deg);
+}
+
+.platform-journey {
+    font-family: "Cormorant Garamond", serif;
+    font-style: italic;
+    color: var(--text);
+    letter-spacing: 0.05em;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
 .tagline {
     font-size: 1.75rem;
     line-height: 1.4;
@@ -136,11 +258,12 @@ h2::before {
     letter-spacing: -0.02em;
 }
 
+/* Adjust section margin to maintain spacing */
 .section {
-    margin: 12rem 0;
+    margin: 8rem 0;  /* Changed from 12rem to create equal spacing */
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition: opacity .8s ease, transform .8s ease;
 }
 
 .section.visible {
