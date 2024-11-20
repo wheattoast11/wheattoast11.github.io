@@ -3,6 +3,7 @@ import { CardEffects } from './src/ui/CardEffects';
 import { ScrollEffects } from './src/ui/ScrollEffects';
 import { createRoot } from 'react-dom/client';
 import { RemotionVideo } from './src/Video';
+import React from 'react';
 
 // Initialize Three.js scene
 const scene = new Scene();
@@ -19,4 +20,4 @@ document.body.appendChild(videoContainer);
 
 // Create React root and render Remotion video
 const root = createRoot(videoContainer);
-root.render(<RemotionVideo />);
+root.render(React.createElement(RemotionVideo));

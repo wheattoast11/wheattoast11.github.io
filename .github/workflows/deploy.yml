@@ -15,7 +15,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-      - run: npm install
+          cache: 'npm'
+      - run: npm ci
       - run: npm run build
       - uses: JamesIves/github-pages-deploy-action@v4
         with:

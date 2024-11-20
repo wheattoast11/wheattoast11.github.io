@@ -8,14 +8,14 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
-# DO NOT ignore dist folder for GitHub Pages
-.DS_Store
+dist-ssr
 *.local
 
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
+.DS_Store
 *.suo
 *.ntvs*
 *.njsproj

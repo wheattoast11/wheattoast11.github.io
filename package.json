@@ -6,11 +6,21 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "render": "remotion render"
+  },
+  "dependencies": {
+    "three": "^0.161.0",
+    "simplex-noise": "^4.0.1",
+    "@remotion/cli": "^4.0.79",
+    "@remotion/renderer": "^4.0.79",
+    "@remotion/bundler": "^4.0.79",
+    "@remotion/player": "^4.0.79",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "vite": "^5.4.2",
-    "three": "^0.161.0",
-    "simplex-noise": "^4.0.1"
+    "@vitejs/plugin-react": "^4.2.1"
   }
 }
