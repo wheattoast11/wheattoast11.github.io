@@ -158,10 +158,12 @@ h2::before {
 
 .platforms-marquee {
     position: relative;
-    width: 100%;
+    width: 100vw;
+    left: 50%;
+    transform: translateX(-50%);
     overflow: hidden;
     padding: 2rem 0;
-    margin: 4rem 0;  /* Changed from -4rem 0 8rem to create equal spacing */
+    margin: 4rem 0;
     background: linear-gradient(
         to right,
         transparent,
