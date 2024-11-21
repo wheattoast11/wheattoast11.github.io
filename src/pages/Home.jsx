@@ -28,6 +28,12 @@ function Home({ onMount }) {
           <span className="platform-name platform-wuji">wuji</span>
           <span className="platform-name platform-boom">boom</span>
           <span className="platform-name platform-journey">journey</span>
+          <span className="platform-name platform-terminals">terminals</span>
+          <span className="platform-name platform-radical">radical</span>
+          <span className="platform-name platform-pathfinder">pathfinder</span>
+          <span className="platform-name platform-wuji">wuji</span>
+          <span className="platform-name platform-boom">boom</span>
+          <span className="platform-name platform-journey">journey</span>
         </div>
       </div>
 
