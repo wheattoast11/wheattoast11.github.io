@@ -158,9 +158,8 @@ h2::before {
 
 .platforms-marquee {
     position: relative;
-    width: 100vw;
-    left: 50%;
-    transform: translateX(-50%);
+    width: 110%;
+    left: -5%;
     overflow: hidden;
     padding: 2rem 0;
     margin: 4rem 0;
@@ -179,6 +178,20 @@ h2::before {
     animation: scroll 30s linear infinite;
     white-space: nowrap;
     will-change: transform;
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+    );
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+    );
 }
 
 .platform-name {
