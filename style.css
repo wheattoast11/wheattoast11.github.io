@@ -178,6 +178,8 @@ h2::before {
     animation: scroll 30s linear infinite;
     white-space: nowrap;
     will-change: transform;
+    width: fit-content;
+    padding-left: 4rem;
     -webkit-mask-image: linear-gradient(
         to right,
         transparent 0%,
@@ -201,6 +203,7 @@ h2::before {
     cursor: pointer;
     padding: 0.5rem 2rem;
     position: relative;
+    display: inline-block;
 }
 
 .platform-name:hover {
@@ -259,7 +262,7 @@ h2::before {
         transform: translateX(0);
     }
     100% {
-        transform: translateX(-100%);
+        transform: translateX(calc(-50% - 2rem));
     }
 }
 

@@ -16,26 +16,22 @@ function Home({ onMount }) {
 
       <div className="platforms-marquee">
         <div className="platforms-track">
-          <span className="platform-name platform-terminals">terminals</span>
-          <span className="platform-name platform-radical">radical</span>
-          <span className="platform-name platform-pathfinder">pathfinder</span>
-          <span className="platform-name platform-wuji">wuji</span>
-          <span className="platform-name platform-boom">boom</span>
-          <span className="platform-name platform-journey">journey</span>
-          <span className="platform-name platform-terminals">terminals</span>
-          <span className="platform-name platform-radical">radical</span>
-          <span className="platform-name platform-pathfinder">pathfinder</span>
-          <span className="platform-name platform-wuji">wuji</span>
-          <span className="platform-name platform-boom">boom</span>
-          <span className="platform-name platform-journey">journey</span>
-          <span className="platform-name platform-terminals">terminals</span>
-          <span className="platform-name platform-radical">radical</span>
-          <span className="platform-name platform-pathfinder">pathfinder</span>
-          <span className="platform-name platform-wuji">wuji</span>
-          <span className="platform-name platform-boom">boom</span>
-          <span className="platform-name platform-journey">journey</span>
+            {/* First set */}
+            <span className="platform-name platform-terminals">terminals</span>
+            <span className="platform-name platform-radical">radical</span>
+            <span className="platform-name platform-pathfinder">pathfinder</span>
+            <span className="platform-name platform-wuji">wuji</span>
+            <span className="platform-name platform-boom">boom</span>
+            <span className="platform-name platform-journey">journey</span>
+            {/* Duplicate set for seamless loop */}
+            <span className="platform-name platform-terminals">terminals</span>
+            <span className="platform-name platform-radical">radical</span>
+            <span className="platform-name platform-pathfinder">pathfinder</span>
+            <span className="platform-name platform-wuji">wuji</span>
+            <span className="platform-name platform-boom">boom</span>
+            <span className="platform-name platform-journey">journey</span>
         </div>
-      </div>
+    </div>
 
       <section className="section">
         <h2>Our Vision</h2>
