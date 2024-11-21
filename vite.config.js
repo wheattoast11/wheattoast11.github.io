@@ -9,8 +9,5 @@ export default defineConfig({
   },
   resolve: {
     extensions: ['.js', '.jsx']
-  },
-  server: {
-    historyApiFallback: true
   }
 });

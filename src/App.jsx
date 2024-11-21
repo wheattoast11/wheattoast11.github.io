@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Manifesto from './pages/Manifesto';
 import { Scene } from './three/Scene';
@@ -23,11 +23,13 @@ function App() {
     videoContainer.id = 'remotion-video';
     document.body.appendChild(videoContainer);
 
-    // Create React root for video
-    const videoRoot = createRoot(videoContainer);
+    const root = document.createElement('div');
+    root.id = 'remotion-root';
+    videoContainer.appendChild(root);
+    
+    const videoRoot = createRoot(root);
     videoRoot.render(<RemotionVideo />);
 
-    // Cleanup on unmount
     return () => {
       if (videoContainer.parentNode) {
         videoContainer.parentNode.removeChild(videoContainer);
@@ -36,15 +38,14 @@ function App() {
   }, []);
 
   return (
-    <>
+    <Router>
       <canvas id="bg"></canvas>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/manifesto" element={<Manifesto />} />
-        </Routes>
-      </Router>
-    </>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/manifesto" element={<Manifesto />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </Router>
   );
 }
 
