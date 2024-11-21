@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { createRoot } from 'react-dom/client';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Manifesto from './pages/Manifesto';
@@ -9,14 +8,19 @@ import { ScrollEffects } from './ui/ScrollEffects';
 import { RemotionVideo } from './Video';
 
 function App() {
+  const [scene, setScene] = useState(null);
+  const [effects, setEffects] = useState({ card: null, scroll: null });
+
   useEffect(() => {
     // Initialize Three.js scene
-    const scene = new Scene();
-    scene.animate();
+    const newScene = new Scene();
+    newScene.animate();
+    setScene(newScene);
 
     // Initialize UI effects
-    new CardEffects();
-    new ScrollEffects();
+    const cardEffects = new CardEffects();
+    const scrollEffects = new ScrollEffects();
+    setEffects({ card: cardEffects, scroll: scrollEffects });
 
     // Initialize Remotion video
     const videoContainer = document.createElement('div');
@@ -31,18 +35,28 @@ function App() {
     videoRoot.render(<RemotionVideo />);
 
     return () => {
+      // Cleanup
+      if (scene) {
+        scene.dispose();
+      }
       if (videoContainer.parentNode) {
         videoContainer.parentNode.removeChild(videoContainer);
       }
     };
   }, []);
 
+  // Reinitialize effects on route change
+  const handleRouteChange = () => {
+    if (effects.card) effects.card.init();
+    if (effects.scroll) effects.scroll.init();
+  };
+
   return (
     <Router>
       <canvas id="bg"></canvas>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/manifesto" element={<Manifesto />} />
+        <Route path="/" element={<Home onMount={handleRouteChange} />} />
+        <Route path="/manifesto" element={<Manifesto onMount={handleRouteChange} />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-function Home() {
+function Home({ onMount }) {
+  useEffect(() => {
+    onMount();
+  }, [onMount]);
+
   return (
     <div id="app">
       <canvas id="bg"></canvas>

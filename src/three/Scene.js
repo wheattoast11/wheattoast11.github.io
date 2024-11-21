@@ -64,4 +64,24 @@ export class Scene {
     
     this.renderer.render(this.scene, this.camera);
   }
+
+  dispose() {
+    // Remove event listeners
+    window.removeEventListener('resize', this.handleResize);
+    document.removeEventListener('mousemove', this.handleMouseMove);
+    
+    // Dispose of Three.js resources
+    this.scene.traverse((object) => {
+      if (object.geometry) object.geometry.dispose();
+      if (object.material) {
+        if (Array.isArray(object.material)) {
+          object.material.forEach(material => material.dispose());
+        } else {
+          object.material.dispose();
+        }
+      }
+    });
+    
+    this.renderer.dispose();
+  }
 }
