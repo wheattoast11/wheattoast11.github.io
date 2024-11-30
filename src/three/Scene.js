@@ -6,14 +6,15 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
 export class Scene {
-  constructor() {
+  constructor(container, dimensions) {
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(75, dimensions.width / dimensions.height, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({
-      canvas: document.querySelector('#bg'),
       antialias: true,
       alpha: true
     });
+    this.renderer.setSize(dimensions.width, dimensions.height);
+    container.appendChild(this.renderer.domElement);
 
     this.composer = null;
     this.flowField = new FlowField();
