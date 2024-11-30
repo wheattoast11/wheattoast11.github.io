@@ -33,6 +33,21 @@ export class Scene {
     this.setupLights();
     this.setupPostProcessing();
     this.setupEventListeners();
+
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.powerPreference = "high-performance";
+    
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.5,  // strength
+      0.4,  // radius
+      0.85  // threshold
+    );
+    bloomPass.renderTargetSize = 0.5; // Reduce resolution for better performance
+    
+    this.performanceMode = 'high';
+    this.fpsHistory = [];
+    this.checkPerformance();
   }
 
   init() {
@@ -139,6 +154,40 @@ export class Scene {
           object.material.dispose();
         }
       }
+    });
+  }
+
+  checkPerformance() {
+    setInterval(() => {
+      const avgFps = this.fpsHistory.reduce((a, b) => a + b, 0) / this.fpsHistory.length;
+      
+      if (avgFps < 30 && this.performanceMode !== 'low') {
+        this.setLowPerformanceMode();
+      } else if (avgFps > 45 && this.performanceMode !== 'high') {
+        this.setHighPerformanceMode();
+      }
+      
+      this.fpsHistory = [];
+    }, 1000);
+  }
+
+  setLowPerformanceMode() {
+    this.performanceMode = 'low';
+    this.renderer.setPixelRatio(1);
+    this.flowField.particleCount = Math.floor(this.flowField.particleCount * 0.7);
+    this.spheres.spheres.forEach(sphere => {
+      if (sphere.material.wireframe) {
+        sphere.visible = false;
+      }
+    });
+  }
+
+  setHighPerformanceMode() {
+    this.performanceMode = 'high';
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.flowField.particleCount = Math.floor(this.flowField.particleCount * 1.3);
+    this.spheres.spheres.forEach(sphere => {
+      sphere.visible = true;
     });
   }
 }

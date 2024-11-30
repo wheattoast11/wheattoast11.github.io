@@ -23,6 +23,20 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
+    
+    <!-- Preload critical fonts -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
+      as="style"
+      onload="this.onload=null;this.rel='stylesheet'"
+    >
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap"
+        rel="stylesheet"
+      >
+    </noscript>
 </head>
 <body>
     <div id="root"></div>

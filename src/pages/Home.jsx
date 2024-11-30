@@ -58,6 +58,40 @@ function Home({ onMount }) {
     }
   };
 
+  const PlatformMarquee = React.memo(() => {
+    const platforms = [
+      { name: 'terminals', className: 'platform-terminals' },
+      { name: 'radical', className: 'platform-radical' },
+      { name: 'pathfinder', className: 'platform-pathfinder' },
+      { name: 'wuji', className: 'platform-wuji' },
+      { name: 'boom', className: 'platform-boom' }
+    ];
+
+    return (
+      <div className="platforms-marquee">
+        <div className="platforms-track">
+          {[...Array(2)].map((_, setIndex) => (
+            <div key={setIndex} className="platform-set">
+              {platforms.map(({ name, className }) => (
+                <motion.span
+                  key={`${setIndex}-${name}`}
+                  className={`platform-name ${className}`}
+                  whileHover={{
+                    scale: 1.1,
+                    transition: { duration: 0.2 }
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {name}
+                </motion.span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  });
+
   return (
     <>
       <canvas id="bg-canvas" style={{
@@ -100,20 +134,7 @@ function Home({ onMount }) {
           </div>
         </motion.section>
 
-        <div className="platforms-marquee">
-          <div className="platforms-track">
-            {[...Array(2)].map((_, setIndex) => (
-              <div key={setIndex} style={{ display: 'flex', gap: '4rem' }}>
-                <span className="platform-name platform-terminals">terminals</span>
-                <span className="platform-name platform-radical">radical</span>
-                <span className="platform-name platform-pathfinder">pathfinder</span>
-                <span className="platform-name platform-wuji">wuji</span>
-                <span className="platform-name platform-boom">boom</span>
-                <span className="platform-name platform-journey">journey</span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <PlatformMarquee />
 
         <motion.section 
           className="section solutions-grid"
