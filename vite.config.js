@@ -30,5 +30,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['three', 'framer-motion', 'pts']
-  }
+  },
+  publicDir: 'public',
+  assetsInclude: ['**/*.png', '**/*.ico', '**/*.webmanifest']
 });

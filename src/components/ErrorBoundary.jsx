@@ -11,18 +11,22 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    return { hasError: true };
+    if (error && !error.message?.includes('Failed to load resource')) {
+      return { hasError: true };
+    }
+    return null;
   }
 
   componentDidCatch(error, errorInfo) {
-    // Log error to console for debugging
-    console.error('ErrorBoundary caught an error:', error);
-    console.error('Error Info:', errorInfo);
-    
-    this.setState({
-      error: error,
-      errorInfo: errorInfo
-    });
+    if (error && !error.message?.includes('Failed to load resource')) {
+      console.error('ErrorBoundary caught an error:', error);
+      console.error('Error Info:', errorInfo);
+      
+      this.setState({
+        error: error,
+        errorInfo: errorInfo
+      });
+    }
   }
 
   render() {
@@ -43,29 +47,6 @@ class ErrorBoundary extends React.Component {
           <div>
             <h1>Something went wrong</h1>
             <p>Please refresh the page or try again later.</p>
-            {process.env.NODE_ENV === 'development' && (
-              <div style={{ 
-                marginTop: '2rem',
-                textAlign: 'left',
-                maxWidth: '800px'
-              }}>
-                <details>
-                  <summary style={{ cursor: 'pointer', marginBottom: '1rem' }}>
-                    Error Details
-                  </summary>
-                  <pre style={{ 
-                    whiteSpace: 'pre-wrap',
-                    wordBreak: 'break-word',
-                    background: '#111',
-                    padding: '1rem',
-                    borderRadius: '4px'
-                  }}>
-                    {this.state.error && this.state.error.toString()}
-                    {this.state.errorInfo && this.state.errorInfo.componentStack}
-                  </pre>
-                </details>
-              </div>
-            )}
           </div>
         </div>
       );
