@@ -8,12 +8,16 @@ class ErrorBoundary extends React.Component {
       error: null,
       errorInfo: null
     };
+    console.log('ErrorBoundary constructed');
   }
 
   static getDerivedStateFromError(error) {
-    console.log('ErrorBoundary getDerivedStateFromError:', error);
-    console.log('Error type:', error?.constructor?.name);
-    console.log('Error message:', error?.message);
+    console.log('ErrorBoundary getDerivedStateFromError:', {
+      error,
+      type: error?.constructor?.name,
+      message: error?.message,
+      stack: error?.stack
+    });
     
     if (error && 
         !error.message?.includes('Failed to load resource') &&
@@ -25,8 +29,13 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.log('ErrorBoundary componentDidCatch:', error);
-    console.log('Component stack:', errorInfo?.componentStack);
+    console.log('ErrorBoundary componentDidCatch:', {
+      error,
+      type: error?.constructor?.name,
+      message: error?.message,
+      stack: error?.stack,
+      componentStack: errorInfo?.componentStack
+    });
     
     if (error && 
         !error.message?.includes('Failed to load resource') &&
@@ -39,7 +48,22 @@ class ErrorBoundary extends React.Component {
     }
   }
 
+  componentDidMount() {
+    console.log('ErrorBoundary mounted');
+  }
+
+  componentDidUpdate() {
+    console.log('ErrorBoundary updated', {
+      hasError: this.state.hasError,
+      error: this.state.error
+    });
+  }
+
   render() {
+    console.log('ErrorBoundary rendering', {
+      hasError: this.state.hasError
+    });
+
     if (this.state.hasError) {
       return (
         <div style={{ 
@@ -57,6 +81,16 @@ class ErrorBoundary extends React.Component {
           <div>
             <h1>Something went wrong</h1>
             <p>Please refresh the page or try again later.</p>
+            {process.env.NODE_ENV === 'development' && (
+              <pre style={{
+                marginTop: '2rem',
+                textAlign: 'left',
+                fontSize: '0.8rem',
+                color: '#666'
+              }}>
+                {this.state.error && this.state.error.toString()}
+              </pre>
+            )}
           </div>
         </div>
       );
