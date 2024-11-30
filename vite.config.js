@@ -11,7 +11,7 @@ export default defineConfig({
         manualChunks: {
           'vendor': ['react', 'react-dom', 'react-router-dom'],
           'three': ['three'],
-          'animation': ['framer-motion', 'pts']
+          'animation': ['framer-motion']
         }
       }
     },
@@ -20,8 +20,8 @@ export default defineConfig({
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: false,
-        drop_debugger: false
+        drop_console: true,
+        drop_debugger: true
       }
     }
   },
@@ -29,7 +29,10 @@ export default defineConfig({
     extensions: ['.js', '.jsx']
   },
   optimizeDeps: {
-    include: ['three', 'framer-motion', 'pts']
+    include: ['three', 'framer-motion'],
+    esbuildOptions: {
+      target: 'esnext'
+    }
   },
   server: {
     headers: {

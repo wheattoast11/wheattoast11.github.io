@@ -1,61 +1,46 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { Scene } from '../three/Scene';
 
 function Canvas() {
   const containerRef = useRef(null);
+  const sceneRef = useRef(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [scene, setScene] = useState(null);
 
-  // Handle resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (containerRef.current) {
-        setDimensions({
-          width: containerRef.current.clientWidth,
-          height: containerRef.current.clientHeight
-        });
-      }
-    };
-
-    // Initial size
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+  const handleResize = useCallback(() => {
+    if (containerRef.current) {
+      const { clientWidth, clientHeight } = containerRef.current;
+      setDimensions({ width: clientWidth, height: clientHeight });
+    }
   }, []);
 
-  // Initialize scene
   useEffect(() => {
-    if (!containerRef.current || dimensions.width === 0 || dimensions.height === 0) {
-      return;
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
     }
+    return () => resizeObserver.disconnect();
+  }, [handleResize]);
+
+  useEffect(() => {
+    if (!containerRef.current || dimensions.width === 0) return;
 
     try {
-      const newScene = new Scene(containerRef.current, dimensions);
-      setScene(prev => {
-        if (prev) {
-          prev.dispose();
-        }
-        return newScene;
-      });
-
-      // Start animation
-      const animate = () => {
-        if (newScene) {
-          newScene.animate();
-        }
-        requestAnimationFrame(animate);
-      };
-      animate();
-
-      return () => {
-        if (newScene) {
-          newScene.dispose();
-        }
-      };
+      if (!sceneRef.current) {
+        sceneRef.current = new Scene(containerRef.current, dimensions);
+        sceneRef.current.animate(0);
+      } else {
+        sceneRef.current.resize(dimensions);
+      }
     } catch (error) {
-      console.error('Error initializing scene:', error);
+      console.error('Scene initialization error:', error);
     }
+
+    return () => {
+      if (sceneRef.current) {
+        sceneRef.current.dispose();
+        sceneRef.current = null;
+      }
+    };
   }, [dimensions]);
 
   return (
@@ -76,4 +61,4 @@ function Canvas() {
   );
 }
 
-export default Canvas; 
+export default React.memo(Canvas); 

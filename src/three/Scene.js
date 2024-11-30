@@ -23,6 +23,12 @@ export class Scene {
     this.mouse = new THREE.Vector2();
     this.targetRotation = new THREE.Vector2();
 
+    this.lastTime = 0;
+    this.frameInterval = 1000 / 30; // Target 30 FPS
+    
+    this.frames = 0;
+    this.lastFpsUpdate = 0;
+
     this.init();
     this.setupLights();
     this.setupPostProcessing();
@@ -85,20 +91,41 @@ export class Scene {
     });
   }
 
-  animate() {
-    requestAnimationFrame(this.animate.bind(this));
-    this.time += 0.001;
+  animate(currentTime) {
+    // Skip frames to maintain target FPS
+    if (currentTime - this.lastTime < this.frameInterval) {
+      requestAnimationFrame(this.animate.bind(this));
+      return;
+    }
+    
+    // Calculate delta time
+    const deltaTime = currentTime - this.lastTime;
+    this.lastTime = currentTime;
 
-    // Smooth camera rotation
-    this.camera.rotation.x += (this.targetRotation.x - this.camera.rotation.x) * 0.05;
-    this.camera.rotation.y += (this.targetRotation.y - this.camera.rotation.y) * 0.05;
+    // FPS monitoring
+    this.frames++;
+    if (currentTime - this.lastFpsUpdate > 1000) {
+      console.debug('FPS:', this.frames);
+      this.frames = 0;
+      this.lastFpsUpdate = currentTime;
+    }
 
-    // Update components
-    this.flowField.update(this.time);
-    this.spheres.update(this.time);
+    // Batch geometry updates
+    this.flowField.update(this.time, deltaTime);
+    this.spheres.update(this.time, deltaTime);
 
-    // Render with post-processing
+    // Use lower quality settings on mobile
+    if (window.innerWidth < 768) {
+      this.renderer.setPixelRatio(1);
+      this.composer.passes.forEach(pass => {
+        if (pass.uniforms?.resolution) {
+          pass.uniforms.resolution.value.set(window.innerWidth/2, window.innerHeight/2);
+        }
+      });
+    }
+
     this.composer.render();
+    requestAnimationFrame(this.animate.bind(this));
   }
 
   dispose() {

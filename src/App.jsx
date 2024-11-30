@@ -1,5 +1,10 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+import { 
+  createBrowserRouter,
+  RouterProvider,
+  UNSAFE_DataRouterContext,
+  UNSAFE_DataRouterStateContext
+} from 'react-router-dom';
 import LoadingState from './components/LoadingState';
 import Canvas from './components/Canvas';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -8,6 +13,22 @@ import reportWebVitals from './utils/reportWebVitals';
 // Lazy load components
 const Home = lazy(() => import('./pages/Home'));
 const Manifesto = lazy(() => import('./pages/Manifesto'));
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/manifesto",
+    element: <Manifesto />,
+  }
+], {
+  future: {
+    v7_startTransition: true,
+    v7_relativeSplatPath: true
+  }
+});
 
 function App() {
   useEffect(() => {
@@ -19,17 +40,7 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <Router>
-        <div style={{ position: 'relative', minHeight: '100vh' }}>
-          <Canvas />
-          <Suspense fallback={<LoadingState />}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/manifesto" element={<Manifesto />} />
-            </Routes>
-          </Suspense>
-        </div>
-      </Router>
+      <RouterProvider router={router} />
     </ErrorBoundary>
   );
 }
