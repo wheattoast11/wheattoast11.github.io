@@ -6,6 +6,7 @@ import { CardEffects } from '../ui/CardEffects';
 import { ScrollEffects } from '../ui/ScrollEffects';
 
 function Home({ onMount }) {
+  const [isLoading, setIsLoading] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const sceneRef = useRef(null);
   const scrollEffectsRef = useRef(null);
@@ -13,31 +14,45 @@ function Home({ onMount }) {
 
   useEffect(() => {
     if (!isLoaded) {
-      onMount?.();
-      setIsLoaded(true);
+      const initializeApp = async () => {
+        try {
+          onMount?.();
+          
+          // Initialize Three.js scene
+          const container = document.getElementById('bg-canvas');
+          if (container) {
+            sceneRef.current = new Scene(container, {
+              width: window.innerWidth,
+              height: window.innerHeight
+            });
+            sceneRef.current.animate(0);
+          }
 
-      // Initialize Three.js scene
-      const container = document.getElementById('bg-canvas');
-      if (container) {
-        sceneRef.current = new Scene(container, {
-          width: window.innerWidth,
-          height: window.innerHeight
-        });
-        sceneRef.current.animate(0);
-      }
+          // Initialize effects
+          scrollEffectsRef.current = new ScrollEffects();
+          cardEffectsRef.current = new CardEffects();
+          
+          setIsLoaded(true);
+        } catch (error) {
+          console.error('Initialization error:', error);
+        } finally {
+          setIsLoading(false);
+        }
+      };
 
-      // Initialize effects
-      scrollEffectsRef.current = new ScrollEffects();
-      cardEffectsRef.current = new CardEffects();
+      initializeApp();
       
       return () => {
         sceneRef.current?.dispose();
         scrollEffectsRef.current?.dispose();
-        // CardEffects doesn't need disposal as it only adds event listeners
       };
     }
   }, [isLoaded, onMount]);
 
+  if (isLoading) {
+    return <LoadingState />;
+  }
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

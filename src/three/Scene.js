@@ -10,12 +10,25 @@ export class Scene {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, dimensions.width / dimensions.height, 0.1, 1000);
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true
+      antialias: window.devicePixelRatio < 2,
+      powerPreference: "high-performance",
+      alpha: true,
+      stencil: false,
+      depth: true
     });
+    
+    // Optimize renderer
     this.renderer.setSize(dimensions.width, dimensions.height);
+    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    this.renderer.shadowMap.enabled = false;
+    
     container.appendChild(this.renderer.domElement);
 
+    // Reduce post-processing quality on mobile
+    const isMobile = window.innerWidth < 768;
+    const bloomStrength = isMobile ? 0.3 : 0.5;
+    const bloomRadius = isMobile ? 0.3 : 0.4;
+    
     this.composer = null;
     this.flowField = new FlowField();
     this.spheres = new Spheres();
@@ -24,7 +37,7 @@ export class Scene {
     this.targetRotation = new THREE.Vector2();
 
     this.lastTime = 0;
-    this.frameInterval = 1000 / 30; // Target 30 FPS
+    this.frameInterval = 1000 / (isMobile ? 30 : 60);
     
     this.frames = 0;
     this.lastFpsUpdate = 0;
