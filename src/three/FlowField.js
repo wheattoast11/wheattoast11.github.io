@@ -5,60 +5,90 @@ export class FlowField {
   constructor() {
     this.noise4D = createNoise4D();
     this.group = new THREE.Group();
-    this.geometry = new THREE.BufferGeometry();
+    this.lines = [];
+    this.particleCount = 150;
+    this.segmentCount = 100;
+    
     this.material = new THREE.LineBasicMaterial({
       color: 0x7A9E9F,
       transparent: true,
-      opacity: 0.3
+      opacity: 0.3,
+      blending: THREE.AdditiveBlending
     });
 
     this.init();
   }
 
-  init() {
+  createFlowLine() {
     const points = [];
-    const numLines = 100;
-    const segments = 75;
-
-    for (let i = 0; i < numLines; i++) {
-      let x = (Math.random() - 0.5) * 100;
-      let y = (Math.random() - 0.5) * 100;
-      let z = (Math.random() - 0.5) * 100;
-
-      for (let j = 0; j < segments; j++) {
-        points.push(new THREE.Vector3(x, y, z));
-        
-        const scale = 0.015;
-        const noise = this.noise4D(x * scale, y * scale, z * scale, Date.now() * 0.00003);
-        
-        x += Math.cos(noise * Math.PI * 2) * 0.4;
-        y += Math.sin(noise * Math.PI * 2) * 0.4;
-        z += (Math.cos(noise * Math.PI) + Math.sin(noise * Math.PI)) * 0.2;
-      }
+    const geometry = new THREE.BufferGeometry();
+    
+    // Random starting position
+    const startPos = new THREE.Vector3(
+      (Math.random() - 0.5) * 100,
+      (Math.random() - 0.5) * 100,
+      (Math.random() - 0.5) * 100
+    );
+    
+    points.push(startPos.clone());
+    
+    // Generate flow line points
+    for (let i = 1; i < this.segmentCount; i++) {
+      const prevPoint = points[i - 1].clone();
+      const noise = this.noise4D(
+        prevPoint.x * 0.02,
+        prevPoint.y * 0.02,
+        prevPoint.z * 0.02,
+        i * 0.1
+      );
+      
+      const angle = noise * Math.PI * 2;
+      const dx = Math.cos(angle) * 0.5;
+      const dy = Math.sin(angle) * 0.5;
+      const dz = (Math.cos(angle) + Math.sin(angle)) * 0.25;
+      
+      points.push(new THREE.Vector3(
+        prevPoint.x + dx,
+        prevPoint.y + dy,
+        prevPoint.z + dz
+      ));
     }
+    
+    geometry.setFromPoints(points);
+    const line = new THREE.Line(geometry, this.material);
+    return { line, points: points.map(p => p.clone()) };
+  }
 
-    this.geometry.setFromPoints(points);
-    const flowLines = new THREE.LineSegments(this.geometry, this.material);
-    this.group.add(flowLines);
+  init() {
+    for (let i = 0; i < this.particleCount; i++) {
+      const flowLine = this.createFlowLine();
+      this.lines.push(flowLine);
+      this.group.add(flowLine.line);
+    }
   }
 
   update(time) {
+    this.lines.forEach((flowLine, lineIndex) => {
+      const points = flowLine.points.map((point, i) => {
+        const noise = this.noise4D(
+          point.x * 0.02,
+          point.y * 0.02,
+          point.z * 0.02,
+          time + lineIndex * 0.1
+        );
+        
+        return new THREE.Vector3(
+          point.x + Math.cos(noise * Math.PI * 2) * 0.1,
+          point.y + Math.sin(noise * Math.PI * 2) * 0.1,
+          point.z + (Math.cos(noise * Math.PI) + Math.sin(noise * Math.PI)) * 0.05
+        );
+      });
+      
+      flowLine.line.geometry.setFromPoints(points);
+      flowLine.line.geometry.computeBoundingSphere();
+    });
+
     this.group.rotation.x += 0.0001;
     this.group.rotation.y += 0.0001;
-
-    const positions = this.geometry.attributes.position.array;
-    for (let i = 0; i < positions.length; i += 3) {
-      const x = positions[i];
-      const y = positions[i + 1];
-      const z = positions[i + 2];
-      
-      const scale = 0.015;
-      const noise = this.noise4D(x * scale, y * scale, z * scale, time);
-      
-      positions[i] += Math.cos(noise * Math.PI * 2) * 0.015;
-      positions[i + 1] += Math.sin(noise * Math.PI * 2) * 0.015;
-      positions[i + 2] += Math.cos(noise * Math.PI) * 0.015;
-    }
-    this.geometry.attributes.position.needsUpdate = true;
   }
 }

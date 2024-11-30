@@ -1,55 +1,80 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function Home({ onMount }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+
   useEffect(() => {
-    onMount();
+    onMount?.();
+    setIsLoaded(true);
   }, [onMount]);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.6, ease: [0.23, 1, 0.32, 1] }
+    }
+  };
+
   return (
-    <div id="app">
-      <canvas id="bg"></canvas>
-      <header>
-        <h1>Intuition Labs</h1>
-        <p className="tagline">Pioneering the future of AI through research and strategic innovation</p>
-      </header>
-
-      <div className="platforms-marquee">
-        <div className="platforms-track">
-            {/* First set */}
-            <span className="platform-name platform-terminals">terminals</span>
-            <span className="platform-name platform-radical">radical</span>
-            <span className="platform-name platform-pathfinder">pathfinder</span>
-            <span className="platform-name platform-wuji">wuji</span>
-            <span className="platform-name platform-boom">boom</span>
-            <span className="platform-name platform-journey">journey</span>
-            {/* Duplicate set for seamless loop */}
-            <span className="platform-name platform-terminals">terminals</span>
-            <span className="platform-name platform-radical">radical</span>
-            <span className="platform-name platform-pathfinder">pathfinder</span>
-            <span className="platform-name platform-wuji">wuji</span>
-            <span className="platform-name platform-boom">boom</span>
-            <span className="platform-name platform-journey">journey</span>
-        </div>
-    </div>
-
-      <section className="section">
-        <h2>Our Vision</h2>
-        <p>Transforming enterprises through cutting-edge AI solutions and polymathic expertise</p>
+    <motion.div
+      className="home-container"
+      initial="hidden"
+      animate={isLoaded ? "visible" : "hidden"}
+      variants={containerVariants}
+    >
+      <motion.section className="hero-section" variants={itemVariants}>
+        <h1 className="gradient-text">Intuition Labs</h1>
+        <p className="tagline">Pioneering the future of AI through intuitive design</p>
         <div className="cta-container">
-          <a href="https://zcal.co/terminals" className="cta-button">Schedule Consultation</a>
-          <Link to="/manifesto" className="text-link">Read Our Manifesto</Link>
+          <motion.a
+            href="https://zcal.co/terminals"
+            className="cta-button primary"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Schedule Consultation
+          </motion.a>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Link to="/manifesto" className="cta-button secondary">
+              Read Our Manifesto
+            </Link>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="section apps-grid">
+      <motion.section 
+        className="section solutions-grid"
+        variants={itemVariants}
+        data-parallax="0.2"
+      >
         <h2>Featured Solutions</h2>
         <div className="grid">
-          <div className="card">
+          <motion.div 
+            className="card"
+            whileHover={{ scale: 1.02, y: -5 }}
+            transition={{ duration: 0.2 }}
+          >
             <h3>Enterprise AI Strategy</h3>
             <p>Comprehensive AI implementation and transformation roadmaps</p>
-            <a href="#strategy" className="learn-more">Learn More →</a>
-            <div className="learn-more-content">
+            <div className="card-content">
               <ul>
                 <li>Enterprise AI Implementation Strategy</li>
                 <li>LLM & Agent System Architecture</li>
@@ -57,12 +82,16 @@ function Home({ onMount }) {
                 <li>Complex System Integration</li>
               </ul>
             </div>
-          </div>
-          <div className="card">
+          </motion.div>
+
+          <motion.div 
+            className="card"
+            whileHover={{ scale: 1.02, y: -5 }}
+            transition={{ duration: 0.2 }}
+          >
             <h3>LLM Systems</h3>
             <p>Custom language model development and integration</p>
-            <a href="#llm" className="learn-more">Learn More →</a>
-            <div className="learn-more-content">
+            <div className="card-content">
               <ul>
                 <li>Custom AI Agent Development</li>
                 <li>Advanced Prompt Engineering</li>
@@ -70,32 +99,29 @@ function Home({ onMount }) {
                 <li>Process Automation & Optimization</li>
               </ul>
             </div>
-          </div>
-          <div className="card">
-            <h3>AI Agents</h3>
-            <p>Autonomous agent systems for process automation</p>
-            <a href="#agents" className="learn-more">Learn More →</a>
-            <div className="learn-more-content">
-              <ul>
-                <li>30k+ hours annual productivity improvement</li>
-                <li>Enterprise systems architecture across industries</li>
-                <li>Performance management for mega-cap enterprises</li>
-                <li>Cloud-wide tech stack transformation</li>
-              </ul>
-            </div>
-          </div>
+          </motion.div>
         </div>
-      </section>
+      </motion.section>
 
-      <footer>
-        <div className="social-links">
-          <a href="https://www.linkedin.com/company/intuition-labs">LinkedIn</a>
-          <a href="https://github.com/wheattoast11">GitHub</a>
-          <a href="https://www.youtube.com/@IntuitionLabsLLC">YouTube</a>
+      <motion.section 
+        className="section vision-section"
+        variants={itemVariants}
+        data-parallax="0.4"
+      >
+        <div className="vision-content">
+          <h2>Our Vision</h2>
+          <p>Transforming enterprises through cutting-edge AI solutions and polymathic expertise</p>
+          <motion.div 
+            className="tech-stack"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            {/* Add tech stack logos/icons here */}
+          </motion.div>
         </div>
-        <p className="copyright">© 2024 Intuition Labs LLC. Pioneering the future of AI.</p>
-      </footer>
-    </div>
+      </motion.section>
+    </motion.div>
   );
 }
 

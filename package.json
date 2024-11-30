@@ -18,10 +18,13 @@
     "@remotion/player": "^4.0.79",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.0"
+    "react-router-dom": "^6.22.0",
+    "framer-motion": "^11.0.3",
+    "pts": "^0.11.4"
   },
   "devDependencies": {
     "vite": "^5.4.2",
-    "@vitejs/plugin-react": "^4.2.1"
+    "@vitejs/plugin-react": "^4.2.1",
+    "@types/three": "^0.161.2"
   }
 }
