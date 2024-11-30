@@ -1,5 +1,5 @@
 import React, { Suspense, lazy, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import LoadingState from './components/LoadingState';
 import Canvas from './components/Canvas';
 import ErrorBoundary from './components/ErrorBoundary';
