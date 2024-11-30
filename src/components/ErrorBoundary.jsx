@@ -11,17 +11,27 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    if (error && !error.message?.includes('Failed to load resource')) {
+    console.log('ErrorBoundary getDerivedStateFromError:', error);
+    console.log('Error type:', error?.constructor?.name);
+    console.log('Error message:', error?.message);
+    
+    if (error && 
+        !error.message?.includes('Failed to load resource') &&
+        !error.message?.includes('Loading chunk') &&
+        !error.message?.includes('Loading CSS chunk')) {
       return { hasError: true };
     }
     return null;
   }
 
   componentDidCatch(error, errorInfo) {
-    if (error && !error.message?.includes('Failed to load resource')) {
-      console.error('ErrorBoundary caught an error:', error);
-      console.error('Error Info:', errorInfo);
-      
+    console.log('ErrorBoundary componentDidCatch:', error);
+    console.log('Component stack:', errorInfo?.componentStack);
+    
+    if (error && 
+        !error.message?.includes('Failed to load resource') &&
+        !error.message?.includes('Loading chunk') &&
+        !error.message?.includes('Loading CSS chunk')) {
       this.setState({
         error: error,
         errorInfo: errorInfo
