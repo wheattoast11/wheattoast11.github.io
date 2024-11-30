@@ -14,31 +14,21 @@ function App() {
     if ('performance' in window) {
       window.performance.mark('app_start');
     }
-    
-    const logWebVitals = (metric) => {
-      console.log('Web Vital:', metric);
-      if (metric.value > 0) {
-        console.log('Metric details:', {
-          name: metric.name,
-          value: metric.value,
-          rating: metric.rating
-        });
-      }
-    };
-
-    reportWebVitals(logWebVitals);
+    reportWebVitals(console.log);
   }, []);
 
   return (
     <ErrorBoundary>
       <Router>
-        <Suspense fallback={<LoadingState />}>
+        <div style={{ position: 'relative', minHeight: '100vh' }}>
           <Canvas />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/manifesto" element={<Manifesto />} />
-          </Routes>
-        </Suspense>
+          <Suspense fallback={<LoadingState />}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/manifesto" element={<Manifesto />} />
+            </Routes>
+          </Suspense>
+        </div>
       </Router>
     </ErrorBoundary>
   );
