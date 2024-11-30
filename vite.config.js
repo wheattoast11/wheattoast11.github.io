@@ -27,6 +27,14 @@ export default defineConfig({
       }
     }
   },
+  css: {
+    postcss: {
+      plugins: [
+        autoprefixer(),
+        cssnano({ preset: 'default' })
+      ]
+    }
+  },
   resolve: {
     extensions: ['.js', '.jsx']
   },
@@ -49,29 +57,6 @@ export default defineConfig({
         form-action 'self';
         frame-ancestors 'none';
       `.replace(/\s+/g, ' ').trim()
-    }
-  },
-  preview: {
-    headers: {
-      'Content-Security-Policy': `
-        default-src 'self';
-        script-src 'self' 'unsafe-inline';
-        style-src 'self' 'unsafe-inline';
-        img-src 'self' data: blob:;
-        font-src 'self';
-        object-src 'none';
-        base-uri 'self';
-        form-action 'self';
-        frame-ancestors 'none';
-      `.replace(/\s+/g, ' ').trim()
-    }
-  },
-  css: {
-    postcss: {
-      plugins: [
-        autoprefixer(),
-        cssnano({ preset: 'default' })
-      ]
     }
   }
 });
