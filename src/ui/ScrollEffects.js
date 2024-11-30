@@ -1,6 +1,8 @@
 export class ScrollEffects {
   constructor() {
     this.init();
+    this.setupParallax();
+    this.observers = [];
   }
 
   init() {
@@ -24,6 +26,7 @@ export class ScrollEffects {
     document.querySelectorAll('.section, [data-parallax]').forEach(el => {
       observer.observe(el);
     });
+    this.observers.push(observer);
   }
 
   setupParallaxForElement(element) {
@@ -36,6 +39,12 @@ export class ScrollEffects {
     };
 
     window.addEventListener('scroll', handleScroll);
+  }
+
+  dispose() {
+    this.observers.forEach(observer => observer.disconnect());
+    this.observers = [];
+    window.removeEventListener('scroll', this.handleScroll);
   }
 }
 
