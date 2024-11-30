@@ -16,12 +16,12 @@ export default defineConfig({
       }
     },
     chunkSizeWarningLimit: 1000,
-    sourcemap: false,
+    sourcemap: true,
     minify: 'terser',
     terserOptions: {
       compress: {
-        drop_console: true,
-        drop_debugger: true
+        drop_console: false,
+        drop_debugger: false
       }
     }
   },
@@ -31,6 +31,34 @@ export default defineConfig({
   optimizeDeps: {
     include: ['three', 'framer-motion', 'pts']
   },
-  publicDir: 'public',
-  assetsInclude: ['**/*.png', '**/*.ico', '**/*.webmanifest']
+  server: {
+    headers: {
+      'Content-Security-Policy': `
+        default-src 'self';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: blob:;
+        font-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+        frame-ancestors 'none';
+      `.replace(/\s+/g, ' ').trim()
+    }
+  },
+  preview: {
+    headers: {
+      'Content-Security-Policy': `
+        default-src 'self';
+        script-src 'self' 'unsafe-inline';
+        style-src 'self' 'unsafe-inline';
+        img-src 'self' data: blob:;
+        font-src 'self';
+        object-src 'none';
+        base-uri 'self';
+        form-action 'self';
+        frame-ancestors 'none';
+      `.replace(/\s+/g, ' ').trim()
+    }
+  }
 });
