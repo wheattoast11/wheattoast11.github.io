@@ -17,10 +17,12 @@
 }
 
 body {
-    background: #000000;
-    color: white;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    font-family: var(--font-display);
+    line-height: 1.6;
     overflow-x: hidden;
+    letter-spacing: -0.01em;
     min-height: 100vh;
 }
 
@@ -46,59 +48,6 @@ body {
 
 .cta-button.secondary {
     background: transparent;
-}
-
-@font-face {
-    font-family: 'Garnett';
-    src: url('/fonts/Garnett-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: 'Aeonik';
-    src: url('/fonts/Aeonik-Regular.woff2') format('woff2');
-    font-weight: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Space Mono";
-    src: url("https://fonts.gstatic.com/s/spacemono/v12/i7dPIFZifjKcF5UAWdDRYEF8RQ.woff2") format("woff2");
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Syncopate";
-    src: url("https://fonts.gstatic.com/s/syncopate/v19/pe0sMIuPIYBCpEV5eFdCBfe_.woff2") format("woff2");
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Cinzel";
-    src: url("https://fonts.gstatic.com/s/cinzel/v23/8vIU7ww63mVu7gtR-kwKxNvkNOjw-tbnfYPlDX5Z.woff2") format("woff2");
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Audiowide";
-    src: url("https://fonts.gstatic.com/s/audiowide/v16/l7gdbjpo0cum0ckerWCdlg_O.woff2") format("woff2");
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Cormorant Garamond";
-    src: url("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3WmX5slCNuHLi8bLeY9MK7whWMhyjYrEPjuw-N.woff2") format("woff2");
-    font-display: swap;
-}
-
-body {
-    font-family: var(--font-body);
-    color: var(--text);
-    line-height: 1.6;
-    overflow-x: hidden;
-    background: var(--background);
-    letter-spacing: -0.01em;
 }
 
 canvas {
@@ -311,7 +260,7 @@ h2::before {
 /* Adjust section margin to maintain spacing */
 .section {
     margin: 8rem 0;  /* Changed from 12rem to create equal spacing */
-    opacity: 0;
+    opacity: 0.8;
     transform: translateY(20px);
     transition: opacity .8s ease, transform .8s ease;
 }
