@@ -1,50 +1,82 @@
 export class ScrollEffects {
   constructor() {
+    this.observers = [];
     this.init();
     this.setupParallax();
-    this.observers = [];
   }
 
   init() {
+    const sections = document.querySelectorAll('.section');
     const options = {
       root: null,
-      rootMargin: '20px', 
+      rootMargin: '0px',
       threshold: buildThresholdList()
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          if (entry.target.dataset.parallax) {
-            this.setupParallaxForElement(entry.target);
-          }
+          const ratio = entry.intersectionRatio;
+          entry.target.style.opacity = Math.min(ratio * 1.5, 1);
+          entry.target.style.transform = `translateY(${(1 - ratio) * 20}px)`;
+          
+          // Animate children with stagger
+          const children = entry.target.children;
+          Array.from(children).forEach((child, index) => {
+            child.style.transitionDelay = `${index * 100}ms`;
+            child.classList.add('visible');
+          });
         }
       });
     }, options);
 
-    document.querySelectorAll('.section, [data-parallax]').forEach(el => {
-      observer.observe(el);
+    sections.forEach(section => {
+      if (section) {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        observer.observe(section);
+      }
     });
-    this.observers.push(observer);
+
+    if (observer) {
+      this.observers.push(observer);
+    }
   }
 
-  setupParallaxForElement(element) {
-    const speed = element.dataset.parallax || 0.5;
+  setupParallax() {
+    const parallaxElements = document.querySelectorAll('[data-parallax]');
     
     const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const offset = scrolled * speed;
-      element.style.transform = `translateY(${offset}px)`;
+      const scrolled = window.pageYOffset;
+      
+      parallaxElements.forEach(element => {
+        if (element) {
+          const speed = element.dataset.parallax || 0.5;
+          const offset = scrolled * speed;
+          element.style.transform = `translateY(${offset}px)`;
+        }
+      });
     };
 
+    // Store the handler reference for cleanup
+    this.handleScroll = handleScroll;
     window.addEventListener('scroll', handleScroll);
   }
 
   dispose() {
-    this.observers.forEach(observer => observer.disconnect());
-    this.observers = [];
-    window.removeEventListener('scroll', this.handleScroll);
+    if (this.observers && this.observers.length) {
+      this.observers.forEach(observer => {
+        if (observer && observer.disconnect) {
+          observer.disconnect();
+        }
+      });
+      this.observers = [];
+    }
+
+    if (this.handleScroll) {
+      window.removeEventListener('scroll', this.handleScroll);
+    }
   }
 }
 
