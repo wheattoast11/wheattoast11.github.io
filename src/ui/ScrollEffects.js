@@ -1,54 +1,41 @@
 export class ScrollEffects {
   constructor() {
     this.init();
-    this.setupParallax();
   }
 
   init() {
-    const sections = document.querySelectorAll('.section');
     const options = {
       root: null,
-      rootMargin: '0px',
+      rootMargin: '20px', 
       threshold: buildThresholdList()
     };
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const ratio = entry.intersectionRatio;
-          entry.target.style.opacity = Math.min(ratio * 1.5, 1);
-          entry.target.style.transform = `translateY(${(1 - ratio) * 20}px)`;
-          
-          // Animate children with stagger
-          const children = entry.target.children;
-          Array.from(children).forEach((child, index) => {
-            child.style.transitionDelay = `${index * 100}ms`;
-            child.classList.add('visible');
-          });
+          entry.target.classList.add('visible');
+          if (entry.target.dataset.parallax) {
+            this.setupParallaxForElement(entry.target);
+          }
         }
       });
     }, options);
 
-    sections.forEach(section => {
-      section.style.opacity = '0';
-      section.style.transform = 'translateY(20px)';
-      section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
-      observer.observe(section);
+    document.querySelectorAll('.section, [data-parallax]').forEach(el => {
+      observer.observe(el);
     });
   }
 
-  setupParallax() {
-    const parallaxElements = document.querySelectorAll('[data-parallax]');
+  setupParallaxForElement(element) {
+    const speed = element.dataset.parallax || 0.5;
     
-    window.addEventListener('scroll', () => {
-      const scrolled = window.pageYOffset;
-      
-      parallaxElements.forEach(element => {
-        const speed = element.dataset.parallax || 0.5;
-        const offset = scrolled * speed;
-        element.style.transform = `translateY(${offset}px)`;
-      });
-    });
+    const handleScroll = () => {
+      const scrolled = window.scrollY;
+      const offset = scrolled * speed;
+      element.style.transform = `translateY(${offset}px)`;
+    };
+
+    window.addEventListener('scroll', handleScroll);
   }
 }
 

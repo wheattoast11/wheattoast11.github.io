@@ -49,7 +49,9 @@ function Home({ onMount }) {
       variants={containerVariants}
     >
       <motion.section className="hero-section" variants={itemVariants}>
-        <h1 className="gradient-text">Intuition Labs</h1>
+        <h1 className="gradient-text" data-text="Intuition Labs">
+          Intuition Labs
+        </h1>
         <p className="tagline">Pioneering the future of AI through intuitive design</p>
         <div className="cta-container">
           <motion.a
