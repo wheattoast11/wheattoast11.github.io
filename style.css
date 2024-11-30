@@ -1,13 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono&family=Syncopate:wght@700&family=Cinzel&family=Audiowide&family=Cormorant+Garamond:ital@1&display=swap');
+
 :root {
-    --primary: #2A2B2E;
-    --accent: #506C7F;
-    --glow: #7A9E9F;
-    --background: #030303;
-    --text: #E4E4E4;
-    --card-bg: rgba(255, 255, 255, .03);
-    --hover: rgba(122, 158, 159, .08);
-    --font-display: "Garnett", system-ui, -apple-system;
-    --font-body: "Aeonik", sans-serif;
+    --font-display: system-ui, -apple-system, sans-serif;
+    --text: rgba(255, 255, 255, 0.9);
+    --accent: #7A9E9F;
+    --background: #000000;
+    --glow: rgba(122, 158, 159, 0.5);
+    --card-bg: rgba(122, 158, 159, 0.05);
+    --hover: rgba(122, 158, 159, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000000;
+    color: white;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--glow) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.cta-button {
+    padding: 1rem 2rem;
+    border: 1px solid var(--primary);
+    border-radius: 4px;
+    text-decoration: none;
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.cta-button.primary {
+    background: var(--primary);
+}
+
+.cta-button.secondary {
+    background: transparent;
 }
 
 @font-face {
@@ -52,12 +90,6 @@
     font-family: "Cormorant Garamond";
     src: url("https://fonts.gstatic.com/s/cormorantgaramond/v16/co3WmX5slCNuHLi8bLeY9MK7whWMhyjYrEPjuw-N.woff2") format("woff2");
     font-display: swap;
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
 }
 
 body {
@@ -766,4 +798,16 @@ footer {
   flex-wrap: wrap;
   justify-content: center;
   margin-top: 2rem;
+}
+
+body {
+  margin: 0;
+  background: #000000;
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
 }

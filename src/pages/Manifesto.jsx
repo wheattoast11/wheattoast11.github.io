@@ -1,21 +1,47 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function Manifesto({ onMount }) {
   useEffect(() => {
-    onMount();
+    onMount?.();
   }, [onMount]);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.6, ease: [0.23, 1, 0.32, 1] }
+    }
+  };
+
   return (
-    <div id="app">
+    <motion.div
+      id="app"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       <canvas id="bg"></canvas>
-      <header>
+      <motion.header variants={itemVariants}>
         <Link to="/" className="back-link">← Back to Home</Link>
         <h1>Our Manifesto</h1>
         <p className="tagline">Shaping the future of AI with purpose and responsibility</p>
-      </header>
+      </motion.header>
 
-      <section className="section manifesto-content">
+      <motion.section className="section manifesto-content" variants={itemVariants}>
         <div className="manifesto-grid">
           <div className="manifesto-item">
             <h2>Purpose</h2>
@@ -48,17 +74,17 @@ function Manifesto({ onMount }) {
             <li>Commitment to diversity, equity, and inclusion in AI development</li>
           </ul>
         </div>
-      </section>
+      </motion.section>
 
-      <footer>
+      <motion.footer variants={itemVariants}>
         <div className="social-links">
-          <a href="https://www.linkedin.com/company/intuition-labs">LinkedIn</a>
-          <a href="https://github.com/wheattoast11">GitHub</a>
-          <a href="https://www.youtube.com/@IntuitionLabsLLC">YouTube</a>
+          <a href="https://www.linkedin.com/company/intuition-labs" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a href="https://github.com/wheattoast11" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://www.youtube.com/@IntuitionLabsLLC" target="_blank" rel="noopener noreferrer">YouTube</a>
         </div>
         <p className="copyright">© 2024 Intuition Labs LLC. Pioneering the future of AI.</p>
-      </footer>
-    </div>
+      </motion.footer>
+    </motion.div>
   );
 }
 

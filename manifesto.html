@@ -3,12 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Manifesto</title>
+    <meta name="description" content="Intuition Labs LLC - Our vision and principles for the future of AI">
+    <meta http-equiv="refresh" content="0;url=/#/manifesto">
+    <title>Our Manifesto - Intuition Labs LLC</title>
     <link rel="stylesheet" href="/style.css">
+    
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
 </head>
 <body>
-    <canvas id="bg"></canvas>
     <div id="app">
+        <canvas id="bg"></canvas>
         <header>
             <a href="/" class="back-link">← Back to Home</a>
             <h1>Our Manifesto</h1>
@@ -52,13 +60,19 @@
 
         <footer>
             <div class="social-links">
-                <a href="#linkedin">LinkedIn</a>
-                <a href="#github">GitHub</a>
-                <a href="#twitter">Twitter</a>
+                <a href="https://www.linkedin.com/company/intuition-labs">LinkedIn</a>
+                <a href="https://github.com/wheattoast11">GitHub</a>
+                <a href="https://www.youtube.com/@IntuitionLabsLLC">YouTube</a>
             </div>
             <p class="copyright">© 2024 Intuition Labs LLC. Pioneering the future of AI.</p>
         </footer>
     </div>
-    <script type="module" src="/main.jsx"></script>
+    <noscript>
+        <style>
+            .back-link { display: inline-block; margin-bottom: 2rem; }
+            #bg { display: none; }
+            #app { opacity: 1 !important; }
+        </style>
+    </noscript>
 </body>
 </html>

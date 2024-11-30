@@ -1,14 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ScrollEffects } from '../ui/ScrollEffects';
+import { CardEffects } from '../ui/CardEffects';
 
 function Home({ onMount }) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    onMount?.();
-    setIsLoaded(true);
-  }, [onMount]);
+    if (!isLoaded) {
+      onMount?.();
+      setIsLoaded(true);
+      const cardEffects = new CardEffects();
+      const scrollEffects = new ScrollEffects();
+      
+      return () => {
+        cardEffects.dispose?.();
+        scrollEffects.dispose?.();
+      };
+    }
+  }, [isLoaded, onMount]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -59,6 +70,21 @@ function Home({ onMount }) {
           </motion.div>
         </div>
       </motion.section>
+
+      <div className="platforms-marquee">
+        <div className="platforms-track">
+          {[...Array(2)].map((_, setIndex) => (
+            <div key={setIndex} style={{ display: 'flex', gap: '4rem' }}>
+              <span className="platform-name platform-terminals">terminals</span>
+              <span className="platform-name platform-radical">radical</span>
+              <span className="platform-name platform-pathfinder">pathfinder</span>
+              <span className="platform-name platform-wuji">wuji</span>
+              <span className="platform-name platform-boom">boom</span>
+              <span className="platform-name platform-journey">journey</span>
+            </div>
+          ))}
+        </div>
+      </div>
 
       <motion.section 
         className="section solutions-grid"
