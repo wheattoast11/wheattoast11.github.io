@@ -2,7 +2,6 @@ export class ScrollEffects {
   constructor() {
     this.observers = [];
     this.init();
-    this.setupParallax();
   }
 
   init() {
@@ -15,26 +14,35 @@ export class ScrollEffects {
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
+        const section = entry.target;
+        
         if (entry.isIntersecting) {
-          const ratio = entry.intersectionRatio;
-          entry.target.style.opacity = Math.min(ratio * 1.5, 1);
-          entry.target.style.transform = `translateY(${(1 - ratio) * 20}px)`;
-          
-          // Animate children with stagger
-          const children = entry.target.children;
+          // Smooth fade in without transform
+          section.style.opacity = Math.min(1, entry.intersectionRatio * 1.5);
+          section.classList.add('visible');
+
+          // Smooth reveal for children
+          const children = section.children;
           Array.from(children).forEach((child, index) => {
-            child.style.transitionDelay = `${index * 100}ms`;
-            child.classList.add('visible');
+            if (!child.classList.contains('visible')) {
+              child.style.transitionDelay = `${index * 0.1}s`;
+              child.classList.add('visible');
+            }
           });
+        } else {
+          // Keep elements visible once they've been shown
+          if (section.classList.contains('visible')) {
+            section.style.opacity = 1;
+          }
         }
       });
     }, options);
 
     sections.forEach(section => {
       if (section) {
+        // Initial state
         section.style.opacity = '0';
-        section.style.transform = 'translateY(20px)';
-        section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        section.style.transition = 'opacity 0.5s ease';
         observer.observe(section);
       }
     });
@@ -42,26 +50,6 @@ export class ScrollEffects {
     if (observer) {
       this.observers.push(observer);
     }
-  }
-
-  setupParallax() {
-    const parallaxElements = document.querySelectorAll('[data-parallax]');
-    
-    const handleScroll = () => {
-      const scrolled = window.pageYOffset;
-      
-      parallaxElements.forEach(element => {
-        if (element) {
-          const speed = element.dataset.parallax || 0.5;
-          const offset = scrolled * speed;
-          element.style.transform = `translateY(${offset}px)`;
-        }
-      });
-    };
-
-    // Store the handler reference for cleanup
-    this.handleScroll = handleScroll;
-    window.addEventListener('scroll', handleScroll);
   }
 
   dispose() {
@@ -73,21 +61,16 @@ export class ScrollEffects {
       });
       this.observers = [];
     }
-
-    if (this.handleScroll) {
-      window.removeEventListener('scroll', this.handleScroll);
-    }
   }
 }
 
 function buildThresholdList() {
-  let thresholds = [];
-  let numSteps = 20;
-
-  for (let i = 1; i <= numSteps; i++) {
-    let ratio = i / numSteps;
-    thresholds.push(ratio);
+  const thresholds = [];
+  const numSteps = 20;
+  
+  for (let i = 0; i <= numSteps; i++) {
+    thresholds.push(i / numSteps);
   }
-
+  
   return thresholds;
 }

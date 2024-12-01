@@ -4,136 +4,201 @@ import { AbsoluteFill } from 'remotion';
 import { createNoise4D } from 'simplex-noise';
 
 const BackgroundAnimation = () => {
-  const noise4D = createNoise4D();
+  const canvasRef = React.useRef(null);
+  const animationFrameRef = React.useRef(null);
+  const noise4D = React.useMemo(() => createNoise4D(), []);
+  const particlesRef = React.useRef(null);
+  const lastTimeRef = React.useRef(0);
+  
   const [dimensions, setDimensions] = React.useState({
     width: window.innerWidth,
     height: window.innerHeight
   });
-  
+
   React.useEffect(() => {
     const handleResize = () => {
-      setDimensions({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width = window.innerWidth * window.devicePixelRatio;
+        canvas.height = window.innerHeight * window.devicePixelRatio;
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+        setDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight
+        });
+      }
     };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const debouncedResize = debounce(handleResize, 100);
+    window.addEventListener('resize', debouncedResize);
+    handleResize();
+    
+    return () => window.removeEventListener('resize', debouncedResize);
   }, []);
-  
+
   React.useEffect(() => {
-    const canvas = document.getElementById('remotionCanvas');
+    const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext('2d');
-    let animationFrame;
-    
-    // Increase number of particles and add variation
-    const particles = Array.from({ length: 150 }, () => ({
-      x: Math.random() * dimensions.width,
-      y: Math.random() * dimensions.height,
-      size: Math.random() * 3 + 0.5,
-      speedX: (Math.random() - 0.5) * 0.3,
-      speedY: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.5 + 0.1
-    }));
+    const ctx = canvas.getContext('2d', {
+      alpha: true,
+      desynchronized: true,
+      willReadFrequently: false
+    });
+    if (!ctx) return;
+
+    canvas.width = dimensions.width * window.devicePixelRatio;
+    canvas.height = dimensions.height * window.devicePixelRatio;
+    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    // Initialize particles only once
+    if (!particlesRef.current) {
+      particlesRef.current = Array.from({ length: 200 }, () => ({
+        x: Math.random() * dimensions.width,
+        y: Math.random() * dimensions.height,
+        size: Math.random() * 4 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: (Math.random() - 0.5) * 0.5,
+        opacity: Math.random() * 0.7 + 0.3,
+        hue: Math.random() * 20 + 180
+      }));
+    }
+
+    let isDestroyed = false;
 
     const animate = (time) => {
-      canvas.width = dimensions.width;
-      canvas.height = dimensions.height;
+      if (isDestroyed) return;
+      
+      // Throttle to 60fps
+      if (time - lastTimeRef.current < 16.67) {
+        animationFrameRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastTimeRef.current = time;
 
-      // Enhanced gradient background
+      ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+      
+      // Draw background gradient (cached version)
       const gradient = ctx.createRadialGradient(
         dimensions.width / 2,
         dimensions.height / 2,
         0,
         dimensions.width / 2,
         dimensions.height / 2,
-        dimensions.width * 0.7
+        dimensions.width * 0.8
       );
-      gradient.addColorStop(0, 'rgba(122, 158, 159, 0.03)');
-      gradient.addColorStop(0.5, 'rgba(80, 108, 127, 0.02)');
-      gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      gradient.addColorStop(0, 'rgba(158, 207, 208, 0.05)');
+      gradient.addColorStop(0.5, 'rgba(122, 158, 159, 0.03)');
+      gradient.addColorStop(1, 'rgba(80, 108, 127, 0.02)');
       ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, dimensions.width, dimensions.height);
 
-      // Update and draw particles with enhanced effects
-      particles.forEach(particle => {
-        const noiseX = noise4D(particle.x * 0.001, particle.y * 0.001, time * 0.0001, 0) * 2;
-        const noiseY = noise4D(particle.x * 0.001, particle.y * 0.001, 0, time * 0.0001) * 2;
+      // Batch particle updates
+      ctx.globalCompositeOperation = 'screen';
+      const particles = particlesRef.current;
+      const currentTime = time * 0.0002;
+
+      for (let i = 0; i < particles.length; i++) {
+        const particle = particles[i];
+        
+        // Update position with noise
+        const noiseX = noise4D(particle.x * 0.002, particle.y * 0.002, currentTime, 0) * 3;
+        const noiseY = noise4D(particle.x * 0.002, particle.y * 0.002, 0, currentTime) * 3;
         
         particle.x += particle.speedX + noiseX;
         particle.y += particle.speedY + noiseY;
 
-        // Improved wrapping logic
-        if (particle.x < -50) particle.x = canvas.width + 50;
-        if (particle.x > canvas.width + 50) particle.x = -50;
-        if (particle.y < -50) particle.y = canvas.height + 50;
-        if (particle.y > canvas.height + 50) particle.y = -50;
+        // Wrap around screen with buffer
+        if (particle.x < -100) particle.x = dimensions.width + 100;
+        if (particle.x > dimensions.width + 100) particle.x = -100;
+        if (particle.y < -100) particle.y = dimensions.height + 100;
+        if (particle.y > dimensions.height + 100) particle.y = -100;
 
-        // Draw particle with glow effect
+        // Draw particle with optimized glow
         const glow = ctx.createRadialGradient(
           particle.x,
           particle.y,
           0,
           particle.x,
           particle.y,
-          particle.size * 2
+          particle.size * 3
         );
-        glow.addColorStop(0, `rgba(122, 158, 159, ${particle.opacity})`);
-        glow.addColorStop(1, 'rgba(122, 158, 159, 0)');
+        const color = `hsla(${particle.hue}, 70%, 70%,`;
+        glow.addColorStop(0, `${color} ${particle.opacity})`);
+        glow.addColorStop(0.5, `${color} ${particle.opacity * 0.5})`);
+        glow.addColorStop(1, `${color} 0)`);
         
         ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size * 2, 0, Math.PI * 2);
+        ctx.arc(particle.x, particle.y, particle.size * 3, 0, Math.PI * 2);
         ctx.fillStyle = glow;
         ctx.fill();
-      });
+      }
 
-      // Draw flowing lines with enhanced effect
+      // Draw optimized flowing lines
+      ctx.globalCompositeOperation = 'screen';
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(122, 158, 159, 0.05)';
-      ctx.lineWidth = 0.5;
+      ctx.strokeStyle = 'rgba(158, 207, 208, 0.1)';
+      ctx.lineWidth = 1;
 
-      for (let i = 0; i < canvas.width; i += 30) {
-        const startY = canvas.height / 2;
-        ctx.moveTo(i, startY);
+      const lineCount = Math.floor(dimensions.width / 40);
+      const stepSize = dimensions.width / lineCount;
 
-        for (let x = 0; x < canvas.width; x += 5) {
-          const noise = noise4D(x * 0.002, startY * 0.002, time * 0.0001, 0);
+      for (let i = 0; i < lineCount; i++) {
+        const startX = i * stepSize;
+        const startY = dimensions.height / 2;
+        ctx.moveTo(startX, startY);
+
+        for (let x = startX; x < startX + stepSize; x += 4) {
+          const noise = noise4D(x * 0.003, startY * 0.003, currentTime, 0);
           const y = startY + 
-                   Math.sin(x * 0.01 + time * 0.001) * 30 +
-                   noise * 50;
+                   Math.sin(x * 0.02 + time * 0.001) * 40 +
+                   noise * 60;
           ctx.lineTo(x, y);
         }
       }
       ctx.stroke();
 
-      animationFrame = requestAnimationFrame(animate);
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
     animate(0);
 
     return () => {
-      if (animationFrame) {
-        cancelAnimationFrame(animationFrame);
+      isDestroyed = true;
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [dimensions]);
+  }, [dimensions, noise4D]);
 
   return (
-    <AbsoluteFill style={{ background: 'transparent' }}>
+    <AbsoluteFill style={{ background: 'transparent', zIndex: 3 }}>
       <canvas
-        id="remotionCanvas"
+        ref={canvasRef}
         style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
           width: '100%',
           height: '100%',
-          opacity: 0.8,
-          mixBlendMode: 'screen'
+          opacity: 0.9,
+          mixBlendMode: 'screen',
+          pointerEvents: 'none',
+          willChange: 'transform'
         }}
       />
     </AbsoluteFill>
   );
+};
+
+// Debounce utility function
+const debounce = (fn, ms) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn.apply(this, args), ms);
+  };
 };
 
 export const RemotionVideo = () => {
@@ -143,12 +208,12 @@ export const RemotionVideo = () => {
   });
 
   React.useEffect(() => {
-    const handleResize = () => {
+    const handleResize = debounce(() => {
       setDimensions({
         width: window.innerWidth,
         height: window.innerHeight
       });
-    };
+    }, 100);
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -167,7 +232,9 @@ export const RemotionVideo = () => {
         position: 'fixed',
         top: 0,
         left: 0,
-        zIndex: -1,
+        zIndex: 3,
+        opacity: 0.9,
+        mixBlendMode: 'screen'
       }}
       loop
     />

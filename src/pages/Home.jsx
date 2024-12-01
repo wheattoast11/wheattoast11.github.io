@@ -1,220 +1,96 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Scene } from '../three/Scene';
-import { CardEffects } from '../ui/CardEffects';
-import { ScrollEffects } from '../ui/ScrollEffects';
+import React from 'react';
+import { m } from 'framer-motion';
+import PlatformMarquee from '../components/PlatformMarquee';
 
-function Home({ onMount }) {
-  const [isLoading, setIsLoading] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const sceneRef = useRef(null);
-  const scrollEffectsRef = useRef(null);
-  const cardEffectsRef = useRef(null);
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20 }
+};
 
-  useEffect(() => {
-    if (!isLoaded) {
-      const initializeApp = async () => {
-        try {
-          onMount?.();
-          
-          // Initialize Three.js scene
-          const container = document.getElementById('bg-canvas');
-          if (container) {
-            sceneRef.current = new Scene(container, {
-              width: window.innerWidth,
-              height: window.innerHeight
-            });
-            sceneRef.current.animate(0);
-          }
-
-          // Initialize effects
-          scrollEffectsRef.current = new ScrollEffects();
-          cardEffectsRef.current = new CardEffects();
-          
-          setIsLoaded(true);
-        } catch (error) {
-          console.error('Initialization error:', error);
-        } finally {
-          setIsLoading(false);
-        }
-      };
-
-      initializeApp();
-      
-      return () => {
-        sceneRef.current?.dispose();
-        scrollEffectsRef.current?.dispose();
-      };
-    }
-  }, [isLoaded, onMount]);
-
-  if (isLoading) {
-    return <LoadingState />;
+const buttonHover = {
+  hover: { 
+    y: -2,
+    transition: { duration: 0.2 }
+  },
+  tap: { 
+    y: 0,
+    transition: { duration: 0.1 }
   }
-  
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
-  };
+};
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.6, ease: [0.23, 1, 0.32, 1] }
-    }
-  };
+const consultationButtonHover = {
+  hover: { 
+    y: -2,
+    boxShadow: '0 0 40px rgba(122, 158, 159, 0.4)',
+    transition: { duration: 0.2 }
+  },
+  tap: { 
+    y: 0,
+    boxShadow: '0 0 30px rgba(122, 158, 159, 0.3)',
+    transition: { duration: 0.1 }
+  }
+};
 
-  const PlatformMarquee = React.memo(() => {
-    const platforms = [
-      { name: 'terminals', className: 'platform-terminals' },
-      { name: 'radical', className: 'platform-radical' },
-      { name: 'pathfinder', className: 'platform-pathfinder' },
-      { name: 'wuji', className: 'platform-wuji' },
-      { name: 'boom', className: 'platform-boom' }
-    ];
-
-    return (
-      <div className="platforms-marquee">
-        <div className="platforms-track">
-          {[...Array(2)].map((_, setIndex) => (
-            <div key={setIndex} className="platform-set">
-              {platforms.map(({ name, className }) => (
-                <motion.span
-                  key={`${setIndex}-${name}`}
-                  className={`platform-name ${className}`}
-                  whileHover={{
-                    scale: 1.1,
-                    transition: { duration: 0.2 }
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {name}
-                </motion.span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  });
-
+const Home = () => {
   return (
     <>
-      <canvas id="bg-canvas" style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: -1,
-        background: 'black'
-      }} />
-      <motion.div
-        className="home-container"
-        initial="hidden"
-        animate={isLoaded ? "visible" : "hidden"}
-        variants={containerVariants}
+      <m.div 
+        className="hero-content"
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        transition={{ duration: 0.8 }}
       >
-        <motion.section className="hero-section" variants={itemVariants}>
-          <h1 className="gradient-text" data-text="Intuition Labs">
-            Intuition Labs
-          </h1>
-          <p className="tagline">Pioneering the future of AI through intuitive design</p>
-          <div className="cta-container">
-            <motion.a
-              href="https://zcal.co/terminals"
-              className="cta-button primary"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Schedule Consultation
-            </motion.a>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link to="/manifesto" className="cta-button secondary">
-                Read Our Manifesto
-              </Link>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        <PlatformMarquee />
-
-        <motion.section 
-          className="section solutions-grid"
-          variants={itemVariants}
-          data-parallax="0.2"
+        <h1 className="company-name gradient-text">
+          Intuition Labs
+        </h1>
+        <p className="hero-tagline">
+          Pioneering the future of AI through intuitive design
+        </p>
+      </m.div>
+      
+      <m.div 
+        className="cta-container"
+        variants={fadeInUp}
+        initial="initial"
+        animate="animate"
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        <m.a 
+          href="#services" 
+          className="cta-button primary"
+          variants={buttonHover}
+          whileHover="hover"
+          whileTap="tap"
         >
-          <h2>Featured Solutions</h2>
-          <div className="grid">
-            <motion.div 
-              className="card"
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3>AI Strategy</h3>
-              <p>Transforming enterprises through human-centric AI systems</p>
-              <div className="card-content">
-                <ul>
-                  <li>Intuitive AI Systems for Complex Process Modeling</li>
-                  <li>Multi-Modal Agent Networks for Emergent Intelligence</li>
-                  <li>Research-Driven Innovation & Discovery Platforms</li>
-                  <li>Human-AI Collaborative Workflows for Industrial Solutions</li>
-                </ul>
-              </div>
-            </motion.div>
-
-            <motion.div 
-              className="card"
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3>LLM Systems</h3>
-              <p>Engineering advanced language models for intelligence at scale</p>
-              <div className="card-content">
-                <ul>
-                  <li>Autonomous Processes for Novel Use Cases</li>
-                  <li>Human-Centric Prompt Design & Response Patterns</li>
-                  <li>Multi-Modal Understanding & Reasoning Tracing</li>
-                  <li>Extensible Collaborative Intelligence Networks</li>
-                </ul>
-              </div>
-            </motion.div>
-          </div>
-        </motion.section>
-
-        <motion.section 
-          className="section vision-section"
-          variants={itemVariants}
-          data-parallax="0.4"
+          <span>Explore Our Services</span>
+        </m.a>
+        <m.a 
+          href="#manifesto" 
+          className="cta-button secondary"
+          variants={buttonHover}
+          whileHover="hover"
+          whileTap="tap"
         >
-          <div className="vision-content">
-            <h2>Our Vision</h2>
-            <p>Transforming enterprises through cutting-edge AI solutions and polymathic expertise</p>
-            <motion.div 
-              className="tech-stack"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              {/* Add tech stack logos/icons here */}
-            </motion.div>
-          </div>
-        </motion.section>
-      </motion.div>
+          <span>Read Our Manifesto</span>
+        </m.a>
+        <m.a 
+          href="https://zcal.co/i/terminals" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="cta-button consultation"
+          variants={consultationButtonHover}
+          whileHover="hover"
+          whileTap="tap"
+        >
+          <span>Schedule Consultation</span>
+        </m.a>
+      </m.div>
+
+      <PlatformMarquee />
     </>
   );
-}
+};
 
 export default Home;

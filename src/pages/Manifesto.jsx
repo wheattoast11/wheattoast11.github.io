@@ -1,10 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
+import { m, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { Scene } from '../three/Scene';
+import { useMouseEffect } from '../hooks/useMouseEffect';
 
 function Manifesto({ onMount }) {
+  const containerRef = useRef(null);
+  const sceneRef = useRef(null);
+  const { scrollYProgress } = useScroll();
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.2], [1, 0.95]);
+  
+  const { glow } = useMouseEffect(containerRef, {
+    intensity: 0.15,
+    ease: 0.1
+  });
+
   useEffect(() => {
     onMount?.();
+    
+    const container = document.getElementById('manifesto-canvas');
+    if (container) {
+      sceneRef.current = new Scene(container, {
+        width: window.innerWidth,
+        height: window.innerHeight
+      });
+    }
+
+    return () => {
+      if (sceneRef.current) {
+        sceneRef.current.dispose();
+      }
+    };
   }, [onMount]);
 
   const containerVariants = {
@@ -28,63 +55,75 @@ function Manifesto({ onMount }) {
   };
 
   return (
-    <motion.div
-      id="app"
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
+    <div 
+      className="manifesto-page"
+      ref={containerRef}
     >
-      <canvas id="bg"></canvas>
-      <motion.header variants={itemVariants}>
-        <Link to="/" className="back-link">← Back to Home</Link>
-        <h1>Our Manifesto</h1>
-        <p className="tagline">Shaping the future of AI with purpose and responsibility</p>
-      </motion.header>
+      <canvas id="manifesto-canvas" className="background-canvas" />
+      
+      <m.div 
+        className="manifesto-content"
+        style={{ opacity, scale }}
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <m.header variants={itemVariants}>
+          <Link to="/" className="back-link">← Back to Home</Link>
+          <h1>Our Manifesto</h1>
+          <p className="tagline">Shaping the future of AI with purpose and responsibility</p>
+        </m.header>
 
-      <motion.section className="section manifesto-content" variants={itemVariants}>
-        <div className="manifesto-grid">
-          <div className="manifesto-item">
-            <h2>Purpose</h2>
-            <p>We believe AI should augment human capabilities, not replace them. Our mission is to create AI systems that enhance human potential while maintaining ethical boundaries and promoting sustainable innovation.</p>
+        <m.section className="section manifesto-content" variants={itemVariants}>
+          <div className="manifesto-grid">
+            <m.div 
+              className="manifesto-item"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <h2>Purpose</h2>
+              <p>We believe AI should augment human capabilities, not replace them. Our mission is to create AI systems that enhance human potential while maintaining ethical boundaries and promoting sustainable innovation.</p>
+            </m.div>
+
+            <m.div 
+              className="manifesto-item"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <h2>Innovation</h2>
+              <p>True innovation comes from understanding both the technical and human aspects of AI. We combine cutting-edge technology with deep industry knowledge to create solutions that matter.</p>
+            </m.div>
+
+            <m.div 
+              className="manifesto-item"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <h2>Ethics</h2>
+              <p>We are committed to developing AI systems that are transparent, fair, and accountable. Our ethical framework ensures that every solution we create considers its impact on society and individuals.</p>
+            </m.div>
+
+            <m.div 
+              className="manifesto-item"
+              variants={itemVariants}
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: "spring", stiffness: 300 }}
+            >
+              <h2>Collaboration</h2>
+              <p>The best solutions emerge from diverse perspectives. We work closely with our clients, fostering partnerships that drive meaningful transformation and sustainable growth.</p>
+            </m.div>
           </div>
-
-          <div className="manifesto-item">
-            <h2>Innovation</h2>
-            <p>True innovation comes from understanding both the technical and human aspects of AI. We combine cutting-edge technology with deep industry knowledge to create solutions that matter.</p>
-          </div>
-
-          <div className="manifesto-item">
-            <h2>Ethics</h2>
-            <p>We are committed to developing AI systems that are transparent, fair, and accountable. Our ethical framework ensures that every solution we create considers its impact on society and individuals.</p>
-          </div>
-
-          <div className="manifesto-item">
-            <h2>Collaboration</h2>
-            <p>The best solutions emerge from diverse perspectives. We work closely with our clients, fostering partnerships that drive meaningful transformation and sustainable growth.</p>
-          </div>
-        </div>
-
-        <div className="principles">
-          <h2>Our Guiding Principles</h2>
-          <ul className="experience-list">
-            <li>Human-centered AI development that prioritizes user needs and experiences</li>
-            <li>Continuous learning and adaptation to emerging technologies and methodologies</li>
-            <li>Transparent communication and collaboration with stakeholders</li>
-            <li>Sustainable and responsible AI implementation practices</li>
-            <li>Commitment to diversity, equity, and inclusion in AI development</li>
-          </ul>
-        </div>
-      </motion.section>
-
-      <motion.footer variants={itemVariants}>
-        <div className="social-links">
-          <a href="https://www.linkedin.com/company/intuition-labs" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-          <a href="https://github.com/wheattoast11" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href="https://www.youtube.com/@IntuitionLabsLLC" target="_blank" rel="noopener noreferrer">YouTube</a>
-        </div>
-        <p className="copyright">© 2024 Intuition Labs LLC. Pioneering the future of AI.</p>
-      </motion.footer>
-    </motion.div>
+        </m.section>
+      </m.div>
+      
+      <div className="interactive-background">
+        <div className="glow-gradient" />
+        <div className="pattern-overlay" />
+      </div>
+    </div>
   );
 }
 
