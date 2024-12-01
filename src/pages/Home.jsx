@@ -76,7 +76,7 @@ const Home = () => {
           <span>Read Our Manifesto</span>
         </m.a>
         <m.a 
-          href="https://zcal.co/i/terminals" 
+          href="https://zcal.co/terminals" 
           target="_blank" 
           rel="noopener noreferrer" 
           className="cta-button consultation"
