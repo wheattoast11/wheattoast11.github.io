@@ -7,6 +7,20 @@
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
     <meta name="theme-color" content="#000000" media="(prefers-color-scheme: light)">
     <meta name="msapplication-TileColor" content="#000000">
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: blob:;
+      connect-src 'self' ws: wss:;
+      worker-src 'self' blob:;
+      frame-src 'self';
+      media-src 'self' data: blob: mediastream:;
+      object-src 'none';
+      base-uri 'self';
+      form-action 'self';
+    ">
     
     <title>Intuition Labs LLC - AI Research & Consulting</title>
     
@@ -23,18 +37,18 @@
     <link rel="manifest" href="/site.webmanifest">
     
     <!-- Preload critical fonts -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Cormorant+Garamond:ital@1&display=swap">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Cormorant+Garamond:ital@1&display=swap" media="print" onload="this.media='all'">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Audiowide&family=Cormorant+Garamond:ital@1&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Audiowide&family=Cormorant+Garamond:ital@1&display=swap" media="print" onload="this.media='all'">
 
     <!-- Fallback for no JavaScript -->
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide&family=Cormorant+Garamond:ital@1&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=Audiowide&family=Cormorant+Garamond:ital@1&display=swap">
     </noscript>
-  <script type="module" crossorigin src="/assets/index-7Bn6lZHa.js"></script>
-  <link rel="modulepreload" crossorigin href="/assets/vendor-BjBuZqNI.js">
-  <link rel="modulepreload" crossorigin href="/assets/animation-BpB084fZ.js">
-  <link rel="modulepreload" crossorigin href="/assets/three-1o6cl0i7.js">
-  <link rel="stylesheet" crossorigin href="/assets/index-CpbQD_Qd.css">
+  <script type="module" crossorigin src="/assets/index-D8pFDfjp.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/react-BHlW0wE9.js">
+  <link rel="modulepreload" crossorigin href="/assets/framer-7IjupUgm.js">
+  <link rel="modulepreload" crossorigin href="/assets/three-CDTd2Mza.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-_A6ztZ7x.css">
 </head>
 <body>
     <div id="root"></div>
